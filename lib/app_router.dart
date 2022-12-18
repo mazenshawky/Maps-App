@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:maps_app/presentation/screens/login_screen.dart';
+import 'package:maps_app/presentation/screens/otp_screen.dart';
+import 'presentation/screens/login_screen.dart';
 
 class Routes {
   static const loginScreen = '/';
+  static const otpScreen = '/otp-screen';
 }
 
 class AppRouter {
@@ -11,6 +13,10 @@ class AppRouter {
       case Routes.loginScreen:
         return MaterialPageRoute(
           builder: (_) => LoginScreen(),
+        );
+      case Routes.otpScreen:
+        return MaterialPageRoute(
+          builder: (_) => const OTPScreen(),
         );
       default:
         return undefinedRoute();

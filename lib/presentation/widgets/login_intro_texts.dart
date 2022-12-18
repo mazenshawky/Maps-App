@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-class IntroTexts extends StatelessWidget {
-  const IntroTexts({super.key});
+class LoginIntroTexts extends StatelessWidget {
+  const LoginIntroTexts({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           'What is your phone number?',

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-class NextButton extends StatelessWidget {
-  const NextButton({super.key, this.onPress});
+class MyButton extends StatelessWidget {
+  const MyButton({super.key, this.onPress, required this.title});
 
   final VoidCallback? onPress;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +21,13 @@ class NextButton extends StatelessWidget {
           backgroundColor: Colors.black,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         ),
-        child: const Text('Next',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-            )),
+        child: Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
       ),
     );
   }

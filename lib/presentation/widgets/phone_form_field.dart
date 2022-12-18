@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maps_app/constants/app_colors.dart';
+import '../../constants/app_colors.dart';
 
 // ignore: must_be_immutable
 class PhoneFormField extends StatelessWidget {

@@ -35,6 +35,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
+  pin_code_fields: ^7.4.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
