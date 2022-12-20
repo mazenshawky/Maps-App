@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:maps_app/app_router.dart';
-import 'package:maps_app/bussiness_logic/cubit/phone_auth/phone_auth_cubit.dart';
+import 'dart:async';
 
-import '../widgets/my_button.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_app/constants/app_colors.dart';
+import 'package:maps_app/helpers/location_helper.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -13,23 +14,68 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  PhoneAuthCubit phoneAuthCubit = PhoneAuthCubit();
+  static Position? position;
 
-  _logout() async {
-    phoneAuthCubit.logOut();
-    Navigator.of(context).pushReplacementNamed(Routes.loginScreen);
+  Completer<GoogleMapController> _mapController = Completer();
+
+  static final CameraPosition _myCurrentLocationCameraPosition = CameraPosition(
+    target: LatLng(position!.latitude, position!.longitude),
+    bearing: 0.0,
+    tilt: 0.0,
+    zoom: 17,
+  );
+
+  Future<void> getCurrentLocation() async {
+    position = await LocationHelper.getCurrentLocation().whenComplete(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentLocation();
+  }
+
+  Widget buildMap() {
+    return GoogleMap(
+      initialCameraPosition: _myCurrentLocationCameraPosition,
+      mapType: MapType.normal,
+      myLocationEnabled: true,
+      zoomControlsEnabled: false,
+      myLocationButtonEnabled: false,
+      onMapCreated: (GoogleMapController controller) {
+        _mapController.complete(controller);
+      },
+    );
+  }
+
+  Future<void> _goToMyCurrentLocation() async {
+    final GoogleMapController controller = await _mapController.future;
+    controller.animateCamera(
+        CameraUpdate.newCameraPosition(_myCurrentLocationCameraPosition));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider<PhoneAuthCubit>(
-        create: (context) => phoneAuthCubit,
-        child: Center(
-          child: MyButton(
-            title: 'Logout',
-            onPress: () => _logout(),
-          ),
+      body: Stack(
+        children: [
+          position != null
+              ? buildMap()
+              : const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.blue,
+                  ),
+                ),
+        ],
+      ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.fromLTRB(0, 0, 8, 30),
+        child: FloatingActionButton(
+          onPressed: _goToMyCurrentLocation,
+          backgroundColor: AppColors.blue,
+          child: const Icon(Icons.place, color: Colors.white),
         ),
       ),
     );
