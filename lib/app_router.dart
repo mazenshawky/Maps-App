@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:maps_app/bussiness_logic/cubit/maps/maps_cubit.dart';
 import 'package:maps_app/bussiness_logic/cubit/phone_auth/phone_auth_cubit.dart';
+import 'package:maps_app/data/repository/maps_repo.dart';
+import 'package:maps_app/data/webservices/places_web_services.dart';
 import 'package:maps_app/presentation/screens/map_screen.dart';
 import 'package:maps_app/presentation/screens/otp_screen.dart';
 import 'presentation/screens/login_screen.dart';
@@ -37,7 +40,10 @@ class AppRouter {
         );
       case Routes.mapScreen:
         return MaterialPageRoute(
-          builder: (_) => const MapScreen(),
+          builder: (_) => BlocProvider(
+            create: (context) => MapsCubit(MapsRepository(PlacesWebServices())),
+            child: const MapScreen(),
+          ),
         );
       default:
         return undefinedRoute();

@@ -6,7 +6,7 @@ abstract class MapsState {}
 class MapsInitial extends MapsState {}
 
 class PlacesLoaded extends MapsState {
-  final List<dynamic> places;
+  final List<PlaceSuggestions> places;
 
   PlacesLoaded(this.places);
 }

@@ -1,13 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:maps_app/bussiness_logic/cubit/maps/maps_cubit.dart';
+import 'package:maps_app/data/models/place_suggestion.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../constants/app_colors.dart';
+import 'my_place_item.dart';
 
 // ignore: must_be_immutable
 class MySearchBar extends StatelessWidget {
   MySearchBar({super.key});
 
   FloatingSearchBarController controller = FloatingSearchBarController();
+
+  List<PlaceSuggestions> places = [];
+
+  Widget buildSuggestionsBloc() {
+    return BlocBuilder<MapsCubit, MapsState>(
+      builder: (context, state) {
+        if (state is PlacesLoaded) {
+          places = (state).places;
+          if (places.isNotEmpty) {
+            return buildPlacesList();
+          } else {
+            return Container();
+          }
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
+  Widget buildPlacesList() {
+    return ListView.builder(
+      itemBuilder: (ctx, index) {
+        return InkWell(
+          onTap: () {
+            controller.close();
+          },
+          child: MyPlaceItem(suggestion: places[index]),
+        );
+      },
+      itemCount: places.length,
+      shrinkWrap: true,
+      physics: const ClampingScrollPhysics(),
+    );
+  }
+
+  void _getPlacesSuggestions(BuildContext context, String query) {
+    final sessionToken = const Uuid().v4();
+    BlocProvider.of<MapsCubit>(context)
+        .emitPlaceSuggestions(query, sessionToken);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +68,9 @@ class MySearchBar extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            children: [],
+            children: [
+              buildSuggestionsBloc(),
+            ],
           ),
         );
       },
@@ -43,7 +91,7 @@ class MySearchBar extends StatelessWidget {
       openAxisAlignment: 0.0,
       width: isPortrait ? 600 : 500,
       debounceDelay: const Duration(microseconds: 500),
-      onQueryChanged: (query) {},
+      onQueryChanged: (query) => _getPlacesSuggestions(context, query),
       onFocusChanged: (_) {},
       transition: CircularFloatingSearchBarTransition(),
       actions: [

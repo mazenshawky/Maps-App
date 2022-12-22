@@ -6,7 +6,7 @@ class MapsRepository {
 
   MapsRepository(this.placesWebServices);
 
-  Future<List<dynamic>> fetchSuggestions(
+  Future<List<PlaceSuggestions>> fetchSuggestions(
       String place, String sessionToken) async {
     final suggestions =
         await placesWebServices.fetchSuggestions(place, sessionToken);
