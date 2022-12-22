@@ -61,7 +61,7 @@ class MyDrawer extends StatelessWidget {
             height: 280,
             child: DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue[100]),
-              child: const MyDrawerHeader(),
+              child: MyDrawerHeader(phoneAuthCubit: phoneAuthCubit),
             ),
           ),
           buildDrawerListItem(leadingIcon: Icons.person, title: 'My Profile'),
