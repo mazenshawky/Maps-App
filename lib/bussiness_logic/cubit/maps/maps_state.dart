@@ -10,3 +10,9 @@ class PlacesLoaded extends MapsState {
 
   PlacesLoaded(this.places);
 }
+
+class PlaceLocationLoaded extends MapsState {
+  final Place place;
+
+  PlaceLocationLoaded(this.place);
+}
