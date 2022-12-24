@@ -7,13 +7,13 @@ class MapsRepository {
 
   MapsRepository(this.placesWebServices);
 
-  Future<List<PlaceSuggestions>> fetchSuggestions(
+  Future<List<PlaceSuggestion>> fetchSuggestions(
       String place, String sessionToken) async {
     final suggestions =
         await placesWebServices.fetchSuggestions(place, sessionToken);
 
     return suggestions
-        .map((suggestion) => PlaceSuggestions.fromJson(suggestion))
+        .map((suggestion) => PlaceSuggestion.fromJson(suggestion))
         .toList();
   }
 
