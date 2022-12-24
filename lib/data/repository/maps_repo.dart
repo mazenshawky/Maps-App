@@ -1,4 +1,6 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_app/data/models/place.dart';
+import 'package:maps_app/data/models/place_directions.dart';
 import 'package:maps_app/data/models/place_suggestion.dart';
 import 'package:maps_app/data/webservices/places_web_services.dart';
 
@@ -22,5 +24,13 @@ class MapsRepository {
         await placesWebServices.getPlaceLocation(placeId, sessionToken);
 
     return Place.fromJson(place);
+  }
+
+  Future<PlaceDirections> getDirections(
+      LatLng origin, LatLng destination) async {
+    final directions =
+        await placesWebServices.getDirections(origin, destination);
+
+    return PlaceDirections.fromJson(directions);
   }
 }

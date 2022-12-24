@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_app/constants/constants.dart';
 
 class PlacesWebServices {
@@ -51,6 +52,23 @@ class PlacesWebServices {
     } catch (error) {
       return Future.error('Place location error : ',
           StackTrace.fromString('this is its trace'));
+    }
+  }
+
+  Future<dynamic> getDirections(LatLng origin, LatLng destination) async {
+    try {
+      Response response = await dio.get(
+        directionsBaseUrl,
+        queryParameters: {
+          'origin': '${origin.latitude},${origin.longitude}',
+          'destination': '${destination.latitude},${destination.longitude}',
+          'key': googleAPIKey,
+        },
+      );
+      return response.data;
+    } catch (error) {
+      return Future.error(
+          'Directions error : ', StackTrace.fromString('this is its trace'));
     }
   }
 }
