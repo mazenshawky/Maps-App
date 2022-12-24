@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_app/constants/app_colors.dart';
+import 'package:maps_app/data/models/place_suggestion.dart';
 import 'package:maps_app/helpers/location_helper.dart';
 import 'package:maps_app/presentation/widgets/my_drawer.dart';
 import 'package:maps_app/presentation/widgets/my_search_bar.dart';
+
+import '../../data/models/place.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -28,16 +31,22 @@ class _MapScreenState extends State<MapScreen> {
     zoom: 17,
   );
 
-  Future<void> getCurrentLocation() async {
-    position = await LocationHelper.getCurrentLocation().whenComplete(() {
-      setState(() {});
-    });
-  }
+  Set<Marker> markers = {};
+  late PlaceSuggestion _placeSuggestion;
+  late Place _selectedPlace;
+  late Marker _searchedForPlaceMarker;
+  late Marker _currentLocationMarker;
+  late CameraPosition _searchedForPlaceCameraPosition;
 
   @override
   void initState() {
     super.initState();
-    getCurrentLocation();
+    _getCurrentLocation();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    position = await LocationHelper.getCurrentLocation()
+        .whenComplete(() => setState(() {}));
   }
 
   Widget buildMap() {
@@ -47,6 +56,7 @@ class _MapScreenState extends State<MapScreen> {
       myLocationEnabled: true,
       zoomControlsEnabled: false,
       myLocationButtonEnabled: false,
+      markers: markers,
       onMapCreated: (GoogleMapController controller) {
         _mapController.complete(controller);
       },
@@ -58,6 +68,50 @@ class _MapScreenState extends State<MapScreen> {
     controller.animateCamera(
         CameraUpdate.newCameraPosition(_myCurrentLocationCameraPosition));
   }
+
+  void _setCameraNewPosition() {
+    _searchedForPlaceCameraPosition = CameraPosition(
+      target: LatLng(
+        _selectedPlace.result.geometry.location.lat,
+        _selectedPlace.result.geometry.location.lng,
+      ),
+      bearing: 0.0,
+      tilt: 0.0,
+      zoom: 13,
+    );
+  }
+
+  Future<void> _goToMySearchedForLocation() async {
+    _setCameraNewPosition();
+    final GoogleMapController controller = await _mapController.future;
+    controller.animateCamera(
+        CameraUpdate.newCameraPosition(_searchedForPlaceCameraPosition));
+    _setSearchedForPlaceMarker();
+  }
+
+  void _setSearchedForPlaceMarker() {
+    _searchedForPlaceMarker = Marker(
+      markerId: const MarkerId('1'),
+      position: _searchedForPlaceCameraPosition.target,
+      onTap: () => _setCurrentLocationMarker(),
+      infoWindow: InfoWindow(title: _placeSuggestion.description),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+    );
+    _addMarkerToMarkers(_searchedForPlaceMarker);
+  }
+
+  void _setCurrentLocationMarker() {
+    _currentLocationMarker = Marker(
+      markerId: const MarkerId('2'),
+      position: _myCurrentLocationCameraPosition.target,
+      infoWindow: const InfoWindow(title: 'Your current location'),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+    );
+    _addMarkerToMarkers(_currentLocationMarker);
+  }
+
+  void _addMarkerToMarkers(Marker marker) =>
+      setState(() => markers.add(marker));
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +127,13 @@ class _MapScreenState extends State<MapScreen> {
                     color: AppColors.blue,
                   ),
                 ),
-          MySearchBar(),
+          MySearchBar(
+            placeSuggestionCallback: (placeSuggestionValue) =>
+                setState(() => _placeSuggestion = placeSuggestionValue),
+            selectedPlaceCallback: (selectedPlaceValue) =>
+                setState(() => _selectedPlace = selectedPlaceValue),
+            goToMySearchedForLocation: _goToMySearchedForLocation,
+          ),
         ],
       ),
       floatingActionButton: Container(

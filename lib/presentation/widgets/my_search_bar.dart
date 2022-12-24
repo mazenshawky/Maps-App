@@ -6,23 +6,35 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../constants/app_colors.dart';
+import '../../data/models/place.dart';
 import 'my_place_item.dart';
 
 // ignore: must_be_immutable
 class MySearchBar extends StatelessWidget {
-  MySearchBar({super.key});
+  MySearchBar({
+    super.key,
+    required this.placeSuggestionCallback,
+    required this.selectedPlaceCallback,
+    required this.goToMySearchedForLocation,
+  });
+
+  final Function(PlaceSuggestion) placeSuggestionCallback;
+
+  final Function(Place) selectedPlaceCallback;
+
+  final VoidCallback goToMySearchedForLocation;
 
   FloatingSearchBarController controller = FloatingSearchBarController();
 
-  List<PlaceSuggestions> places = [];
+  List<PlaceSuggestion> places = [];
 
-  Widget buildSuggestionsBloc() {
+  Widget buildSuggestionsBloc(BuildContext context) {
     return BlocBuilder<MapsCubit, MapsState>(
       builder: (context, state) {
         if (state is PlacesLoaded) {
           places = (state).places;
           if (places.isNotEmpty) {
-            return buildPlacesList();
+            return buildPlacesList(context);
           } else {
             return Container();
           }
@@ -33,12 +45,14 @@ class MySearchBar extends StatelessWidget {
     );
   }
 
-  Widget buildPlacesList() {
+  Widget buildPlacesList(BuildContext context) {
     return ListView.builder(
       itemBuilder: (ctx, index) {
         return InkWell(
           onTap: () {
+            placeSuggestionCallback(places[index]);
             controller.close();
+            _getSelectedPlaceDetails(context, places[index]);
           },
           child: MyPlaceItem(suggestion: places[index]),
         );
@@ -55,6 +69,25 @@ class MySearchBar extends StatelessWidget {
         .emitPlaceSuggestions(query, sessionToken);
   }
 
+  void _getSelectedPlaceDetails(
+      BuildContext context, PlaceSuggestion placeSelected) {
+    final sessionToken = const Uuid().v4();
+    BlocProvider.of<MapsCubit>(context)
+        .emitPlaceDetails(placeSelected.placeId, sessionToken);
+  }
+
+  Widget buildSelectedPlaceDetailsBloc() {
+    return BlocListener<MapsCubit, MapsState>(
+      listener: (context, state) {
+        if (state is PlaceDetailsLoaded) {
+          selectedPlaceCallback((state).place);
+          goToMySearchedForLocation();
+        }
+      },
+      child: Container(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isPortrait =
@@ -69,7 +102,8 @@ class MySearchBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              buildSuggestionsBloc(),
+              buildSuggestionsBloc(context),
+              buildSelectedPlaceDetailsBloc(),
             ],
           ),
         );
