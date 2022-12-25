@@ -35,13 +35,13 @@ class MySocialMediaIcons extends StatelessWidget {
         ),
         const SizedBox(width: 15),
         buildIcon(
-          FontAwesomeIcons.youtube,
-          Uri.parse('https://www.youtube.com/@mazenshawky'),
+          FontAwesomeIcons.github,
+          Uri.parse('https://github.com/mazenshawky'),
         ),
         const SizedBox(width: 15),
         buildIcon(
-          FontAwesomeIcons.telegram,
-          Uri.parse('https://t.me/mazenshawky'),
+          FontAwesomeIcons.linkedin,
+          Uri.parse('https://www.linkedin.com/in/mazenshawky'),
         ),
       ]),
     );
