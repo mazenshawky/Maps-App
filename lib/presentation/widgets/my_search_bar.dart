@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maps_app/bussiness_logic/cubit/maps/maps_cubit.dart';
+import 'package:maps_app/data/models/place_directions.dart';
 import 'package:maps_app/data/models/place_suggestion.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:uuid/uuid.dart';
@@ -15,14 +16,26 @@ class MySearchBar extends StatelessWidget {
     super.key,
     required this.placeSuggestionCallback,
     required this.selectedPlaceCallback,
+    required this.placeDirectionsCallback,
+    required this.isTimeAndDistanceVisibleCallback,
     required this.goToMySearchedForLocation,
+    required this.getPolylinePoints,
+    required this.clearPolylines,
+    required this.clearMarkers,
+    required this.progressIndicator,
   });
 
   final Function(PlaceSuggestion) placeSuggestionCallback;
-
   final Function(Place) selectedPlaceCallback;
+  final Function(bool) isTimeAndDistanceVisibleCallback;
+  final Function(PlaceDirections) placeDirectionsCallback;
 
   final VoidCallback goToMySearchedForLocation;
+  final VoidCallback getPolylinePoints;
+  final VoidCallback clearPolylines;
+  final VoidCallback clearMarkers;
+
+  final bool progressIndicator;
 
   FloatingSearchBarController controller = FloatingSearchBarController();
 
@@ -53,6 +66,8 @@ class MySearchBar extends StatelessWidget {
             placeSuggestionCallback(places[index]);
             controller.close();
             _getSelectedPlaceDetails(context, places[index]);
+            clearPolylines();
+            clearMarkers();
           },
           child: MyPlaceItem(suggestion: places[index]),
         );
@@ -88,6 +103,18 @@ class MySearchBar extends StatelessWidget {
     );
   }
 
+  Widget buildDirectionsBloc() {
+    return BlocListener<MapsCubit, MapsState>(
+      listener: (context, state) {
+        if (state is PlaceDirectionsLoaded) {
+          placeDirectionsCallback((state).directions);
+          getPolylinePoints();
+        }
+      },
+      child: Container(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isPortrait =
@@ -104,6 +131,7 @@ class MySearchBar extends StatelessWidget {
             children: [
               buildSuggestionsBloc(context),
               buildSelectedPlaceDetailsBloc(),
+              buildDirectionsBloc(),
             ],
           ),
         );
@@ -125,8 +153,9 @@ class MySearchBar extends StatelessWidget {
       openAxisAlignment: 0.0,
       width: isPortrait ? 600 : 500,
       debounceDelay: const Duration(microseconds: 500),
+      progress: progressIndicator,
       onQueryChanged: (query) => _getPlacesSuggestions(context, query),
-      onFocusChanged: (_) {},
+      onFocusChanged: (_) => isTimeAndDistanceVisibleCallback(false),
       transition: CircularFloatingSearchBarTransition(),
       actions: [
         FloatingSearchBarAction(

@@ -1,15 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_app/bussiness_logic/cubit/maps/maps_cubit.dart';
 import 'package:maps_app/constants/app_colors.dart';
 import 'package:maps_app/data/models/place_suggestion.dart';
 import 'package:maps_app/helpers/location_helper.dart';
+import 'package:maps_app/presentation/widgets/distance_and_time.dart';
 import 'package:maps_app/presentation/widgets/my_drawer.dart';
 import 'package:maps_app/presentation/widgets/my_search_bar.dart';
 
 import '../../data/models/place.dart';
+import '../../data/models/place_directions.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -38,6 +42,14 @@ class _MapScreenState extends State<MapScreen> {
   late Marker _currentLocationMarker;
   late CameraPosition _searchedForPlaceCameraPosition;
 
+  PlaceDirections? placeDirections;
+  bool progressIndicator = false;
+  late List<LatLng> polylinePoints;
+  bool isSearchedPlaceMarkerClicked = false;
+  bool isTimeAndDistanceVisible = false;
+  late String duration;
+  late String distance;
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +72,16 @@ class _MapScreenState extends State<MapScreen> {
       onMapCreated: (GoogleMapController controller) {
         _mapController.complete(controller);
       },
+      polylines: placeDirections != null
+          ? {
+              Polyline(
+                polylineId: const PolylineId('my_polyline'),
+                color: Colors.black,
+                width: 4,
+                points: polylinePoints,
+              ),
+            }
+          : {},
     );
   }
 
@@ -93,7 +115,14 @@ class _MapScreenState extends State<MapScreen> {
     _searchedForPlaceMarker = Marker(
       markerId: const MarkerId('1'),
       position: _searchedForPlaceCameraPosition.target,
-      onTap: () => _setCurrentLocationMarker(),
+      onTap: () {
+        _setCurrentLocationMarker();
+        setState(() {
+          isSearchedPlaceMarkerClicked = true;
+          isTimeAndDistanceVisible = true;
+          _getDirections();
+        });
+      },
       infoWindow: InfoWindow(title: _placeSuggestion.description),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
     );
@@ -112,6 +141,25 @@ class _MapScreenState extends State<MapScreen> {
 
   void _addMarkerToMarkers(Marker marker) =>
       setState(() => markers.add(marker));
+
+  void _clearMarkers() => setState(() => markers.clear());
+
+  void _getPolylinePoints() {
+    polylinePoints = placeDirections!.polyLinePoints
+        .map((e) => LatLng(e.latitude, e.longitude))
+        .toList();
+  }
+
+  void _getDirections() {
+    BlocProvider.of<MapsCubit>(context).emitPlaceDirections(
+      _myCurrentLocationCameraPosition.target,
+      _searchedForPlaceCameraPosition.target,
+    );
+  }
+
+  void _clearPolylines() {
+    polylinePoints.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,8 +180,23 @@ class _MapScreenState extends State<MapScreen> {
                 setState(() => _placeSuggestion = placeSuggestionValue),
             selectedPlaceCallback: (selectedPlaceValue) =>
                 setState(() => _selectedPlace = selectedPlaceValue),
+            placeDirectionsCallback: (placeDirectionsValue) =>
+                setState(() => placeDirections = placeDirectionsValue),
+            isTimeAndDistanceVisibleCallback: (isTimeAndDistanceVisibleValue) =>
+                setState(() =>
+                    isTimeAndDistanceVisible = isTimeAndDistanceVisibleValue),
             goToMySearchedForLocation: _goToMySearchedForLocation,
+            getPolylinePoints: _getPolylinePoints,
+            clearPolylines: _clearPolylines,
+            clearMarkers: _clearMarkers,
+            progressIndicator: progressIndicator,
           ),
+          isSearchedPlaceMarkerClicked
+              ? DistanceAndTime(
+                  isTimeAndDistanceVisible: isTimeAndDistanceVisible,
+                  placeDirections: placeDirections,
+                )
+              : Container(),
         ],
       ),
       floatingActionButton: Container(
