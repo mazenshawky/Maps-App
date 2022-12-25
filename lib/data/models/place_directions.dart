@@ -19,7 +19,10 @@ class PlaceDirections {
 
     final northeast = data['bounds']['northeast'];
     final southwest = data['bounds']['southwest'];
-    final bounds = LatLngBounds(southwest: southwest, northeast: northeast);
+    final bounds = LatLngBounds(
+      southwest: LatLng(southwest['lat'], southwest['lng']),
+      northeast: LatLng(northeast['lat'], northeast['lng']),
+    );
 
     late String distance;
     late String duration;
@@ -33,7 +36,7 @@ class PlaceDirections {
     return PlaceDirections(
       bounds: bounds,
       polyLinePoints:
-          PolylinePoints().decodePolyline(data['overview_polyline']),
+          PolylinePoints().decodePolyline(data['overview_polyline']['points']),
       distance: distance,
       duration: duration,
     );
