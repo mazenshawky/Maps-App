@@ -45,7 +45,7 @@ class MyDrawer extends StatelessWidget {
         leadingIcon: Icons.logout,
         title: 'Logout',
         onTap: () => _logout(context),
-        color: Colors.red,
+        color: AppColors.red,
         trailling: const SizedBox(),
       ),
     );

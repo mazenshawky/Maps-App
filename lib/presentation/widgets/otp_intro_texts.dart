@@ -16,7 +16,7 @@ class OTPIntroTexts extends StatelessWidget {
         const Text(
           'Verify your phone number',
           style: TextStyle(
-            color: Colors.black,
+            color: AppColors.black,
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
@@ -30,7 +30,7 @@ class OTPIntroTexts extends StatelessWidget {
             text: TextSpan(
               text: 'Enter your 6 digits code number sent to ',
               style: const TextStyle(
-                  color: Colors.black, fontSize: 18, height: 1.4),
+                  color: AppColors.black, fontSize: 18, height: 1.4),
               children: <TextSpan>[
                 TextSpan(
                   text: phoneNumber,

@@ -161,7 +161,7 @@ class MySearchBar extends StatelessWidget {
         FloatingSearchBarAction(
           showIfOpened: false,
           child: CircularButton(
-            icon: Icon(Icons.place, color: Colors.black.withOpacity(0.6)),
+            icon: Icon(Icons.place, color: AppColors.black.withOpacity(0.6)),
             onPressed: () {},
           ),
         ),

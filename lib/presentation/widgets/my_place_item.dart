@@ -17,7 +17,7 @@ class MyPlaceItem extends StatelessWidget {
       margin: const EdgeInsetsDirectional.all(8),
       padding: const EdgeInsetsDirectional.all(4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(children: [
@@ -37,7 +37,7 @@ class MyPlaceItem extends StatelessWidget {
                 TextSpan(
                   text: '${suggestion.description.split(',')[0]}\n',
                   style: const TextStyle(
-                    color: Colors.black,
+                    color: AppColors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -45,7 +45,7 @@ class MyPlaceItem extends StatelessWidget {
                 TextSpan(
                   text: subTitle.substring(2),
                   style: const TextStyle(
-                    color: Colors.black,
+                    color: AppColors.black,
                     fontSize: 16,
                   ),
                 ),

@@ -49,7 +49,7 @@ class LoginScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(errorMsg),
-              backgroundColor: Colors.black,
+              backgroundColor: AppColors.black,
               duration: const Duration(seconds: 3),
             ),
           );
@@ -73,7 +73,7 @@ class LoginScreen extends StatelessWidget {
             child: Text(
               '${Constants.generateCountryFlag()} +20',
               style: const TextStyle(
-                color: Colors.black,
+                color: AppColors.black,
                 fontSize: 18,
                 letterSpacing: 2.0,
               ),
@@ -97,7 +97,7 @@ class LoginScreen extends StatelessWidget {
                 letterSpacing: 2.0,
               ),
               decoration: const InputDecoration(border: InputBorder.none),
-              cursorColor: Colors.black,
+              cursorColor: AppColors.black,
               keyboardType: TextInputType.phone,
               validator: (value) {
                 if (value!.isEmpty) {
@@ -121,7 +121,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: SingleChildScrollView(
         child: Form(
           key: _phoneFormKey,

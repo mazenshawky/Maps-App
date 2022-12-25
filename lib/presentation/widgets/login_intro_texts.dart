@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maps_app/constants/app_colors.dart';
 
 class LoginIntroTexts extends StatelessWidget {
   const LoginIntroTexts({super.key});
@@ -11,7 +12,7 @@ class LoginIntroTexts extends StatelessWidget {
         const Text(
           'What is your phone number?',
           style: TextStyle(
-            color: Colors.black,
+            color: AppColors.black,
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
@@ -24,7 +25,7 @@ class LoginIntroTexts extends StatelessWidget {
           child: const Text(
             'Please enter your phone number to verify your account.',
             style: TextStyle(
-              color: Colors.black,
+              color: AppColors.black,
               fontSize: 18,
             ),
           ),

@@ -43,7 +43,7 @@ class OTPScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(errorMsg),
-              backgroundColor: Colors.black,
+              backgroundColor: AppColors.black,
               duration: const Duration(seconds: 3),
             ),
           );
@@ -57,7 +57,7 @@ class OTPScreen extends StatelessWidget {
     return PinCodeTextField(
       appContext: context,
       autoFocus: true,
-      cursorColor: Colors.black,
+      cursorColor: AppColors.black,
       keyboardType: TextInputType.number,
       length: 6,
       validator: (value) {
@@ -78,13 +78,13 @@ class OTPScreen extends StatelessWidget {
         borderWidth: 1,
         activeColor: AppColors.blue,
         inactiveColor: AppColors.blue,
-        inactiveFillColor: Colors.white,
+        inactiveFillColor: AppColors.white,
         activeFillColor: AppColors.lightBlue,
         selectedColor: AppColors.blue,
-        selectedFillColor: Colors.white,
+        selectedFillColor: AppColors.white,
       ),
       animationDuration: const Duration(milliseconds: 300),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       enableActiveFill: true,
       onCompleted: (submitedCode) {
         otpCode = submitedCode;
@@ -97,7 +97,7 @@ class OTPScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: Form(
         key: _otpFormKey,
         child: Container(

@@ -76,7 +76,7 @@ class _MapScreenState extends State<MapScreen> {
           ? {
               Polyline(
                 polylineId: const PolylineId('my_polyline'),
-                color: Colors.black,
+                color: AppColors.black,
                 width: 4,
                 points: polylinePoints,
               ),
@@ -204,7 +204,7 @@ class _MapScreenState extends State<MapScreen> {
         child: FloatingActionButton(
           onPressed: _goToMyCurrentLocation,
           backgroundColor: AppColors.blue,
-          child: const Icon(Icons.place, color: Colors.white),
+          child: const Icon(Icons.place, color: AppColors.white),
         ),
       ),
     );

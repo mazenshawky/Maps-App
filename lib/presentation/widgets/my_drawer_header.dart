@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maps_app/bussiness_logic/cubit/phone_auth/phone_auth_cubit.dart';
+import 'package:maps_app/constants/app_colors.dart';
 
 class MyDrawerHeader extends StatelessWidget {
   const MyDrawerHeader({super.key, required this.phoneAuthCubit});
@@ -13,7 +14,7 @@ class MyDrawerHeader extends StatelessWidget {
       children: [
         const CircleAvatar(
           radius: 64.0,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           child: CircleAvatar(
             radius: 60.0,
             backgroundImage: AssetImage('assets/images/mazen.jpeg'),

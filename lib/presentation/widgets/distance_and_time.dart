@@ -27,7 +27,7 @@ class DistanceAndTime extends StatelessWidget {
                 child: Card(
                   margin: const EdgeInsets.fromLTRB(20, 50, 20, 0),
                   elevation: 6,
-                  color: Colors.white,
+                  color: AppColors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -42,7 +42,7 @@ class DistanceAndTime extends StatelessWidget {
                     title: Text(
                       placeDirections?.duration ?? '',
                       style: const TextStyle(
-                        color: Colors.black,
+                        color: AppColors.black,
                         fontSize: 16,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -57,7 +57,7 @@ class DistanceAndTime extends StatelessWidget {
                 child: Card(
                   margin: const EdgeInsets.fromLTRB(20, 50, 20, 0),
                   elevation: 6,
-                  color: Colors.white,
+                  color: AppColors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -72,7 +72,7 @@ class DistanceAndTime extends StatelessWidget {
                     title: Text(
                       placeDirections?.distance ?? '',
                       style: const TextStyle(
-                        color: Colors.black,
+                        color: AppColors.black,
                         fontSize: 16,
                       ),
                       overflow: TextOverflow.ellipsis,

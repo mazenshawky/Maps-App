@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maps_app/constants/app_colors.dart';
 
 class MyButton extends StatelessWidget {
   const MyButton({super.key, this.onPress, required this.title});
@@ -18,13 +19,13 @@ class MyButton extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(110, 50),
-          backgroundColor: Colors.black,
+          backgroundColor: AppColors.black,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         ),
         child: Text(
           title,
           style: const TextStyle(
-            color: Colors.white,
+            color: AppColors.white,
             fontSize: 16,
           ),
         ),

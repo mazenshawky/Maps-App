@@ -26,9 +26,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Maps App',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       onGenerateRoute: appRouter.generateRoute,
       initialRoute: initialRoute,
     );
