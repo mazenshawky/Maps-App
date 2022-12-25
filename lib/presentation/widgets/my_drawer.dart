@@ -64,7 +64,11 @@ class MyDrawer extends StatelessWidget {
               child: MyDrawerHeader(phoneAuthCubit: phoneAuthCubit),
             ),
           ),
-          buildDrawerListItem(leadingIcon: Icons.person, title: 'My Profile'),
+          buildDrawerListItem(
+            leadingIcon: Icons.person,
+            title: 'My Profile',
+            onTap: () {},
+          ),
           const MyDivider(),
           buildDrawerListItem(
             leadingIcon: Icons.history,
@@ -72,9 +76,17 @@ class MyDrawer extends StatelessWidget {
             onTap: () {},
           ),
           const MyDivider(),
-          buildDrawerListItem(leadingIcon: Icons.settings, title: 'Settings'),
+          buildDrawerListItem(
+            leadingIcon: Icons.settings,
+            title: 'Settings',
+            onTap: () {},
+          ),
           const MyDivider(),
-          buildDrawerListItem(leadingIcon: Icons.help, title: 'Help'),
+          buildDrawerListItem(
+            leadingIcon: Icons.help,
+            title: 'Help',
+            onTap: () {},
+          ),
           const MyDivider(),
           buildLogoutBlocProvider(context),
           const SizedBox(height: 200),
