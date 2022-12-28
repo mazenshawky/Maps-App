@@ -68,6 +68,8 @@ class _MapScreenState extends State<MapScreen> {
       myLocationEnabled: true,
       zoomControlsEnabled: false,
       myLocationButtonEnabled: false,
+      mapToolbarEnabled: false,
+      compassEnabled: false,
       markers: markers,
       onMapCreated: (GoogleMapController controller) {
         _mapController.complete(controller);
